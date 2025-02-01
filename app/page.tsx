@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 const apologyMessages = [
   "I'm really sorry for my behavior...",
@@ -16,6 +16,11 @@ export default function ApologyApp() {
   const [stage, setStage] = useState(0);
   const [rejections, setRejections] = useState(0);
   const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
+  const [width, setWidth] = useState(0);
+
+  useLayoutEffect(() => {
+    setWidth(window.innerWidth);
+  }, []);
 
   const generateRandomPosition = () => ({
     x: Math.floor(Math.random() * (window.innerWidth - 200)),
@@ -30,13 +35,14 @@ export default function ApologyApp() {
   };
 
   useEffect(() => {
+    if (width > 600) return;
     if (stage === 5) {
       const interval = setInterval(() => {
         setButtonPosition(generateRandomPosition());
-      }, 1000);
+      }, 500);
       return () => clearInterval(interval);
     }
-  }, [stage]);
+  }, [stage, width]);
 
   // Thank you page
   if (stage === 6) {
